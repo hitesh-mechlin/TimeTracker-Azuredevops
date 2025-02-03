@@ -7,7 +7,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  - group: docker  # Replace with the actual name of your variable group
+  - group: docker  # Make absolutely sure this is the EXACT name
 
 steps:
 - task: Checkout@1
@@ -15,6 +15,7 @@ steps:
   inputs:
     clean: true
   continueOnError: false
+
 
 - script: |
     echo "Started checking out the code from GitHub..."
@@ -32,9 +33,10 @@ steps:
     echo "Starting Docker Hub login..."
   displayName: 'Log: Docker Hub Login Start'
 
-- script: |
-    echo "$(DOCKER_HUB_PASSWORD)" | docker login -u hiteshmechlin --password-stdin
-  displayName: 'Docker Hub Login'
+  - script: |
+  echo "$(DOCKER_HUB_PASSWORD)" | docker login -u hiteshmechlin --password-stdin  # EXACT name here
+displayName: 'Docker Hub Login'
+
 
 - script: |
     docker --version
