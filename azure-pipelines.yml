@@ -1,54 +1,27 @@
 trigger:
   branches:
     include:
-      - master  # Trigger pipeline on updates to the master branch
+      - master  # Trigger on master branch push
 
 pool:
-  vmImage: 'ubuntu-latest'  # Using the latest Ubuntu image for the build
-
-variables:
-  imageName: 'hiteshmechlin/timetracker'  # Docker image name (replace with your DockerHub image name)
-  dockerUsername: 'hiteshmechlin'  # Hardcoded DockerHub Username
-  dockerPassword: 'Locksys@123'  # Hardcoded DockerHub Password or Token
+  vmImage: 'ubuntu-latest'
 
 steps:
-# Checkout the code from GitHub
-- task: Checkout@1  # Use Checkout task, no version required or use Checkout@1
-  displayName: 'Checkout Code'
-  continueOnError: false
+- task: Checkout@1
+  displayName: 'Checkout code'
 
-# Log in to DockerHub using hardcoded credentials
-- script: |
-    echo "Logging into DockerHub..."
-    echo $(dockerPassword) | docker login -u $(dockerUsername) --password-stdin
-    echo "Docker login successful."
-  displayName: 'Login to DockerHub'
-  continueOnError: false
-
-# Set up Docker and build the image using the Docker service connection
 - task: Docker@2
+  displayName: 'Login to Docker Hub'
   inputs:
-    containerRegistry: 'DockerhubTimeTracker'  # Reference to the service connection created for DockerHub
-    repository: $(imageName)  # Docker image name
-    command: 'buildAndPush'  # Command to build and push the Docker image
-    Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'  # Path to the Dockerfile
-    tags: |
-      $(Build.BuildId)  # Tag the image with the build ID
-      latest  # You can also add `latest` as another tag
-    buildContext: $(Build.SourcesDirectory)  # Context for the build is the root of the repo
+    command: 'login'
+    containerRegistry: 'Dockerhubconnection'
+
+- task: Docker@2
   displayName: 'Build and Push Docker Image'
-  continueOnError: false
-
-# Optionally, if you want to add logging in each step of the Docker task
-- script: |
-    echo "Building the Docker image..."
-    docker build -t $(dockerRegistry)/$(imageName):$(Build.BuildId) $(Build.SourcesDirectory)
-    echo "Docker image built successfully."
-
-    echo "Pushing the Docker image..."
-    docker push $(dockerRegistry)/$(imageName):$(Build.BuildId)
-    echo "Docker image pushed to $(dockerRegistry)/$(imageName):$(Build.BuildId)."
-  displayName: 'Build and Push Docker Image (Detailed Logging)'
-  continueOnError: false
-
-# Optional: Add other tasks as needed
+  inputs:
+    command: 'buildAndPush'
+    repository: 'hiteshmechlin/timetracker'
+    dockerfile: 'Dockerfile'  # Adjust this if your Dockerfile is located elsewhere
+    tags: '$(Build.BuildId)'  # Tag with build ID or another version tag
+    containerRegistry: 'Dockerhubconnection'
+    buildContext: $(Build.SourcesDirectory)  # Path to your source directory
