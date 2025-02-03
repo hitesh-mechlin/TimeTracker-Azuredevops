@@ -9,14 +9,10 @@ pool:
 variables:
   imageName: 'hiteshmechlin/timetracker'  # Replace with your DockerHub username and image name
   dockerRegistry: 'docker.io'  # DockerHub registry (optional if you're using the default)
-  
-steps:
-- task: UseGitHubActions@0
-  inputs:
-    githubConnection: 'github-TimeTracker'  # Use the GitHub service connection you've configured
 
+steps:
 # Checkout the code from GitHub
-- task: Checkout@2
+- task: Checkout@1  # Use Checkout task, no version required or use Checkout@1
 
 # Set up Docker
 - task: Docker@2
