@@ -38,15 +38,25 @@ steps:
     echo "mechlinhitesh" | docker login -u hiteshmechlin --password-stdin
   displayName: 'Docker Hub Login'
 
+# Verify Docker Version (debugging step)
+- script: |
+    docker --version
+  displayName: 'Verify Docker Version'
+
 # Log Step: Docker Build and Push Start
 - script: |
     echo "Starting Docker image build and push..."
   displayName: 'Log: Docker Build and Push Start'
 
+# Log Build ID (debugging step)
+- script: |
+    echo "Build ID: $(Build.BuildId)"
+  displayName: 'Log Build ID'
+
 # Hardcoded Build and Push Task
 - script: |
-    docker build -t hiteshmechlin/timetracker:$(Build.BuildId) .  # Ensure Build.BuildId is available here
-    docker push hiteshmechlin/timetracker:$(Build.BuildId)  # Ensure Build.BuildId is available here
+    docker build -t hiteshmechlin/timetracker:$(Build.BuildId) .
+    docker push hiteshmechlin/timetracker:$(Build.BuildId)
   displayName: 'Build and Push Docker Image'
 
 # Log Step: Completion
