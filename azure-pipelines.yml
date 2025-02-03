@@ -17,7 +17,7 @@ jobs:
   steps:
     - task: Checkout@1  # Checkout the code from GitHub
 
-    - task: UseNode@2  # Use Node.js to install dependencies
+    - task: UseNode@1  # Use Node.js to install dependencies (Updated to @1)
       inputs:
         versionSpec: '18.x'  # Specify Node.js version (same as in Dockerfile)
         addToPath: true
