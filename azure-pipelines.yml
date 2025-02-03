@@ -1,48 +1,51 @@
 trigger: 
   branches:
     include:
-      - master  # Triggers pipeline when changes are pushed to the master branch
+      - master  # Triggers pipeline when changes are pushed to the master branch (change to 'main' if needed)
 
 pool:
   vmImage: 'ubuntu-latest'  # Use an Ubuntu-based agent for the build
 
 variables:
-  dockerRegistryServiceConnection: 'DockerhubConnectionTimeTracker'  # Set this up in Azure DevOps for DockerHub
-  imageName: 'hiteshmechlin/timetracker'  # e.g. myusername/myapp
-  tag: 'tagone'  # Manually set tag to 'tagone'
+  dockerRegistryServiceConnection: 'DockerhubConnectionTimeTracker'  # DockerHub connection name configured in Azure DevOps
+  imageName: 'hiteshmechlin/timetracker'  # DockerHub repository name
+  tag: '$(Build.BuildId)'  # Dynamically set tag based on build ID to ensure unique tags for each build
 
 jobs:
 - job: BuildAndPushDockerImage
   displayName: 'Build and Push Docker Image to DockerHub'
   steps:
-    - task: Checkout@1  # Checkout the code from GitHub
+    # Checkout the code from GitHub repository
+    - task: Checkout@1  
 
-    - task: UseNode@1  # Use Node.js to install dependencies (Updated to @1)
+    # Set up Node.js to install dependencies
+    - task: UseNode@1  # Use Node.js to install dependencies
       inputs:
-        versionSpec: '18.x'  # Specify Node.js version (same as in Dockerfile)
+        versionSpec: '18.x'  # Node.js version matching your Dockerfile
         addToPath: true
 
+    # Install dependencies via NPM
     - script: |
         npm install
       displayName: 'Install NPM dependencies'
 
+    # Build the Docker image
     - task: Docker@2
       displayName: 'Build Docker image'
       inputs:
         command: 'build'
-        Dockerfile: '**/Dockerfile'
+        Dockerfile: '**/Dockerfile'  # Path to Dockerfile
         containerRegistry: $(dockerRegistryServiceConnection)  # Reference DockerHub credentials
-        repository: $(imageName)  # DockerHub repository
+        repository: $(imageName)  # DockerHub repository name
         tags: |
-          $(tag)  # Tag the image with the manually specified tag 'tagone'
+          $(tag)  # Dynamically tag the image with the Build ID
 
+    # Push the Docker image to DockerHub
     - task: Docker@2
       displayName: 'Push Docker image to DockerHub'
       inputs:
         command: 'push'
         containerRegistry: $(dockerRegistryServiceConnection)  # Reference DockerHub credentials
-        repository: $(imageName)  # DockerHub repository
+        repository: $(imageName)  # DockerHub repository name
         tags: |
-          $(tag)  # Push the image with the tag 'tagone'
-
-#Sample 1
+          $(tag)  # Push the image with the dynamically set tag
