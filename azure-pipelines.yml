@@ -7,7 +7,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  - group: docker  # Make sure the variable group name 'docker' is correct
+  - group: docker  # Ensure 'docker' is the exact name of your variable group
 
 steps:
 - task: Checkout@1
