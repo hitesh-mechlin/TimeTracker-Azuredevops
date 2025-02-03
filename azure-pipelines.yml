@@ -9,12 +9,42 @@ pool:
 steps:
 - task: Checkout@1
   displayName: 'Checkout code'
+  inputs:
+    clean: true
+  continueOnError: false
+
+# Log Step: Indicating start of code checkout
+- script: |
+    echo "Started checking out the code from GitHub..."
+  displayName: 'Log: GitHub Checkout Start'
+
+- task: Checkout@1
+  displayName: 'Checkout Code from GitHub'
+
+# Debugging Step: Output Variables for Debugging
+- script: |
+    echo "Docker Registry Service Connection: $(Dockerhubconnection)"
+    echo "Build Source Directory: $(Build.SourcesDirectory)"
+    echo "Build ID: $(Build.BuildId)"
+    echo "Checking Dockerfile presence at $(Build.SourcesDirectory)/Dockerfile"
+    ls -al $(Build.SourcesDirectory)  # This will list all files in the source directory
+  displayName: 'Log: Debug Variables and Files'
+
+# Log Step: Docker Hub Login Start
+- script: |
+    echo "Starting Docker Hub login..."
+  displayName: 'Log: Docker Hub Login Start'
 
 - task: Docker@2
   displayName: 'Login to Docker Hub'
   inputs:
     command: 'login'
     containerRegistry: 'Dockerhubconnection'
+
+# Log Step: Docker Build and Push Start
+- script: |
+    echo "Starting Docker image build and push..."
+  displayName: 'Log: Docker Build and Push Start'
 
 - task: Docker@2
   displayName: 'Build and Push Docker Image'
@@ -26,4 +56,7 @@ steps:
     containerRegistry: 'Dockerhubconnection'
     buildContext: $(Build.SourcesDirectory)  # Path to your source directory
 
-#Test1
+# Log Step: Completion
+- script: |
+    echo "Docker image build and push completed successfully!"
+  displayName: 'Log: Docker Build and Push Completion'
