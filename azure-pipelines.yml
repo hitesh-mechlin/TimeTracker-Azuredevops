@@ -18,9 +18,6 @@ steps:
     echo "Started checking out the code from GitHub..."
   displayName: 'Log: GitHub Checkout Start'
 
-- task: Checkout@1
-  displayName: 'Checkout Code from GitHub'
-
 # Debugging Step: Output Variables for Debugging
 - script: |
     echo "Docker Registry Service Connection: $(Dockerhubconnection)"
