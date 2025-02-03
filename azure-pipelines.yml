@@ -44,3 +44,5 @@ jobs:
         repository: $(imageName)  # DockerHub repository
         tags: |
           $(tag)  # Push the image with the tag 'tagone'
+
+#Sample 
