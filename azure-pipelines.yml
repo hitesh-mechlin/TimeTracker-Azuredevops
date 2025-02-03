@@ -26,10 +26,10 @@ steps:
   displayName: 'Login to DockerHub'
   continueOnError: false
 
-# Set up Docker and build the image
+# Set up Docker and build the image using the Docker service connection
 - task: Docker@2
   inputs:
-    containerRegistry: $(dockerRegistry)  # Use DockerHub registry (no need for service connection)
+    containerRegistry: 'DockerhubTimeTracker'  # Reference to the service connection created for DockerHub
     repository: $(imageName)  # Docker image name
     command: 'buildAndPush'  # Command to build and push the Docker image
     Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'  # Path to the Dockerfile
