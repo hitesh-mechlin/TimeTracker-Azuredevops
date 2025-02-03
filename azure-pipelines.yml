@@ -1,0 +1,36 @@
+trigger:
+  branches:
+    include:
+      - master  # This will trigger the pipeline on updates to the master branch
+
+pool:
+  vmImage: 'ubuntu-latest'  # Using the latest Ubuntu image for the build
+
+variables:
+  imageName: 'hiteshmechlin/timetracker'  # Replace with your DockerHub username and image name
+  dockerRegistry: 'docker.io'  # DockerHub registry (optional if you're using the default)
+  
+steps:
+- task: UseGitHubActions@0
+  inputs:
+    githubConnection: 'github-TimeTracker'  # Use the GitHub service connection you've configured
+
+# Checkout the code from GitHub
+- task: Checkout@2
+
+# Set up Docker
+- task: Docker@2
+  inputs:
+    containerRegistry: 'DockerhubTimeTracker'  # The service connection to DockerHub
+    repository: $(imageName)  # Name of the Docker image
+    command: 'buildAndPush'
+    Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'  # Path to the Dockerfile in the repository
+    tags: |
+      $(Build.BuildId)  # You can also use other tag options like `latest` or specific version numbers
+      latest  # Tagging the image as 'latest'
+    buildContext: $(Build.SourcesDirectory)  # Context for the build is the root of the repo
+
+# Optional step: Push the image to DockerHub (this is already handled by the Docker task above)
+# So you can skip this part if DockerHub push is included in the task above.
+
+# Optionally you can add additional steps to notify on success/failure or deploy your app.
