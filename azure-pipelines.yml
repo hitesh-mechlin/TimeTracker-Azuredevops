@@ -8,7 +8,6 @@ pool:
 
 variables:
   imageName: 'hiteshmechlin/timetracker'  # Docker image name (replace with your DockerHub image name)
-  dockerRegistry: 'docker.io'  # DockerHub registry (optional, but good to keep)
   dockerUsername: 'hiteshmechlin'  # Hardcoded DockerHub Username
   dockerPassword: 'Locksys@123'  # Hardcoded DockerHub Password or Token
 
