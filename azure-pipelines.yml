@@ -20,7 +20,7 @@ steps:
 
 # Debugging Step: Output Variables for Debugging
 - script: |
-    echo "Docker Registry Service Connection: my-dockerhub-connection"  # Hardcoded connection name
+    echo "Docker Registry Service Connection: $(Dockerhubconnection)"
     echo "Build Source Directory: $(Build.SourcesDirectory)"
     echo "Build ID: $(Build.BuildId)"
     echo "Checking Dockerfile presence at $(Build.SourcesDirectory)/Dockerfile"
@@ -32,30 +32,29 @@ steps:
     echo "Starting Docker Hub login..."
   displayName: 'Log: Docker Hub Login Start'
 
-# Hardcoded Docker Hub login task (replace with actual login details)
 - task: Docker@2
   displayName: 'Login to Docker Hub'
   inputs:
     command: 'login'
-    containerRegistry: 'Dockerhubconnection'  # Hardcoded registry name
+    containerRegistry: 'Dockerhubconnection'
 
 # Log Step: Docker Build and Push Start
 - script: |
     echo "Starting Docker image build and push..."
   displayName: 'Log: Docker Build and Push Start'
 
-# Hardcoded Build and Push Task
 - task: Docker@2
   displayName: 'Build and Push Docker Image'
   inputs:
     command: 'buildAndPush'
-    repository: 'hiteshmechlin/timetracker'  # Hardcoded repository
-    dockerfile: 'Dockerfile'  # Assuming Dockerfile is in the root directory
-    tags: '$(Build.BuildId)'  # Can still keep dynamic tags based on Build ID, or replace with hardcoded tags like 'v1.0'
-    containerRegistry: 'Dockerhubconnection'  # Hardcoded registry name
+    repository: 'hiteshmechlin/timetracker'
+    dockerfile: 'Dockerfile'  # Adjust this if your Dockerfile is located elsewhere
+    tags: '$(Build.BuildId)'  # Tag with build ID or another version tag
+    containerRegistry: 'Dockerhubconnection'
     buildContext: $(Build.SourcesDirectory)  # Path to your source directory
 
 # Log Step: Completion
 - script: |
     echo "Docker image build and push completed successfully!"
   displayName: 'Log: Docker Build and Push Completion'
+#Sample2
