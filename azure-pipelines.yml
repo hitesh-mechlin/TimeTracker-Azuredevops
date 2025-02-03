@@ -7,7 +7,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  - group: docker  # Ensure the group name 'docker' is correct in Azure DevOps
+  - group: docker  # Make sure the variable group name 'docker' is correct
 
 steps:
 - task: Checkout@1
@@ -33,7 +33,7 @@ steps:
   displayName: 'Log: Docker Hub Login Start'
 
 - script: |
-    echo "$(DOCKER_HUB_ACCESS_TOKEN)" | docker login -u $(DOCKER_USERNAME) --password-stdin  # Use access token and username
+    echo "$(DOCKER_HUB_ACCESS_TOKEN)" | docker login -u $(DOCKER_USERNAME) --password-stdin  # Use access token and username from the variable group
   displayName: 'Docker Hub Login'
 
 - script: |
