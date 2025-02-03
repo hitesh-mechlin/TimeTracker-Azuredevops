@@ -45,8 +45,8 @@ steps:
 
 # Hardcoded Build and Push Task
 - script: |
-    docker build -t hiteshmechlin/timetracker:$(Build.BuildId) .
-    docker push hiteshmechlin/timetracker:$(Build.BuildId)
+    docker build -t hiteshmechlin/timetracker:$(Build.BuildId) .  # Ensure Build.BuildId is available here
+    docker push hiteshmechlin/timetracker:$(Build.BuildId)  # Ensure Build.BuildId is available here
   displayName: 'Build and Push Docker Image'
 
 # Log Step: Completion
