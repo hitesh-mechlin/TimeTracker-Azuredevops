@@ -37,7 +37,7 @@ steps:
   displayName: 'Login to Docker Hub'
   inputs:
     command: 'login'
-    containerRegistry: 'my-dockerhub-connection'  # Hardcoded registry name
+    containerRegistry: 'Dockerhubconnection'  # Hardcoded registry name
 
 # Log Step: Docker Build and Push Start
 - script: |
@@ -52,7 +52,7 @@ steps:
     repository: 'hiteshmechlin/timetracker'  # Hardcoded repository
     dockerfile: 'Dockerfile'  # Assuming Dockerfile is in the root directory
     tags: '$(Build.BuildId)'  # Can still keep dynamic tags based on Build ID, or replace with hardcoded tags like 'v1.0'
-    containerRegistry: 'my-dockerhub-connection'  # Hardcoded registry name
+    containerRegistry: 'Dockerhubconnection'  # Hardcoded registry name
     buildContext: $(Build.SourcesDirectory)  # Path to your source directory
 
 # Log Step: Completion
