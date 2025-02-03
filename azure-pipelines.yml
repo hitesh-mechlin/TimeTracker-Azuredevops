@@ -1,10 +1,13 @@
 trigger:
   branches:
     include:
-      - master  # Trigger on master branch push
+      - master
 
 pool:
   vmImage: 'ubuntu-latest'
+
+variables:
+  - group: docker  # Replace with the actual name of your variable group
 
 steps:
 - task: Checkout@1
@@ -13,53 +16,43 @@ steps:
     clean: true
   continueOnError: false
 
-# Log Step: Indicating start of code checkout
 - script: |
     echo "Started checking out the code from GitHub..."
   displayName: 'Log: GitHub Checkout Start'
 
-# Debugging Step: Output Variables for Debugging
 - script: |
-    echo "Docker Registry: Docker Hub (Hardcoded)"
+    echo "Docker Registry: Docker Hub"
     echo "Build Source Directory: $(Build.SourcesDirectory)"
     echo "Build ID: $(Build.BuildId)"
     echo "Checking Dockerfile presence at $(Build.SourcesDirectory)/Dockerfile"
-    ls -al $(Build.SourcesDirectory)  # This will list all files in the source directory
+    ls -al $(Build.SourcesDirectory)
   displayName: 'Log: Debug Variables and Files'
 
-# Log Step: Docker Hub Login Start
 - script: |
     echo "Starting Docker Hub login..."
   displayName: 'Log: Docker Hub Login Start'
 
-# Hardcoded Docker Hub login in the script (replace with actual credentials)
 - script: |
-    echo "Logging into Docker Hub with hardcoded credentials..."
-    echo "mechlinhitesh" | docker login -u hiteshmechlin --password-stdin
+    echo "$(DOCKER_HUB_PASSWORD)" | docker login -u hiteshmechlin --password-stdin
   displayName: 'Docker Hub Login'
 
-# Verify Docker Version (debugging step)
 - script: |
     docker --version
   displayName: 'Verify Docker Version'
 
-# Log Step: Docker Build and Push Start
 - script: |
     echo "Starting Docker image build and push..."
   displayName: 'Log: Docker Build and Push Start'
 
-# Log Build ID (debugging step)
 - script: |
     echo "Build ID: $(Build.BuildId)"
   displayName: 'Log Build ID'
 
-# Hardcoded Build and Push Task
 - script: |
     docker build -t hiteshmechlin/timetracker:$(Build.BuildId) .
     docker push hiteshmechlin/timetracker:$(Build.BuildId)
   displayName: 'Build and Push Docker Image'
 
-# Log Step: Completion
 - script: |
     echo "Docker image build and push completed successfully!"
   displayName: 'Log: Docker Build and Push Completion'
