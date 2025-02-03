@@ -16,7 +16,6 @@ steps:
     clean: true
   continueOnError: false
 
-
 - script: |
     echo "Started checking out the code from GitHub..."
   displayName: 'Log: GitHub Checkout Start'
@@ -33,10 +32,9 @@ steps:
     echo "Starting Docker Hub login..."
   displayName: 'Log: Docker Hub Login Start'
 
-  - script: |
-  echo "$(DOCKER_HUB_PASSWORD)" | docker login -u hiteshmechlin --password-stdin  # EXACT name here
-displayName: 'Docker Hub Login'
-
+- script: |
+    echo "$(DOCKER_HUB_PASSWORD)" | docker login -u hiteshmechlin --password-stdin  # EXACT name here
+  displayName: 'Docker Hub Login'
 
 - script: |
     docker --version
