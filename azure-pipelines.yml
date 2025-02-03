@@ -49,4 +49,3 @@ jobs:
         repository: $(imageName)  # DockerHub repository name
         tags: |
           $(tag)  # Push the image with the dynamically set tag
-#Sample2
