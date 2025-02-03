@@ -34,11 +34,11 @@ jobs:
       displayName: 'Build Docker image'
       inputs:
         command: 'build'
-        Dockerfile: '**/Dockerfile'  # Path to Dockerfile
+        Dockerfile: './Dockerfile'  # Reference Dockerfile in the same directory as the pipeline file
         containerRegistry: $(dockerRegistryServiceConnection)  # Reference DockerHub credentials
         repository: $(imageName)  # DockerHub repository name
         tags: |
-          $(tag)  # Dynamically tag the image with the Build ID
+          $(tag)  # Tag the image with Build ID
 
     # Push the Docker image to DockerHub
     - task: Docker@2
