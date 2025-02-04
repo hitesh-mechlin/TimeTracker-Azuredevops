@@ -24,7 +24,7 @@ steps:
     containerRegistry: $(dockerRegistry)  # Docker Hub service connection
     repository: $(repositoryName)  # Docker Hub repository name
     command: 'buildAndPush'  # Command to build and push
-    Dockerfile: '**/Dockerfile'  # Path to the Dockerfile
+    Dockerfile: 'Dockerfile'  # Path to the Dockerfile
     tags: |
       $(Build.BuildId)  # Tag the image with the build ID
       $(Build.SourceVersion)  # Optionally tag with the commit hash
