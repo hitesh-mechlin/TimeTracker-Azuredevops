@@ -1,35 +1,24 @@
+
 trigger:
   branches:
     include:
-      - master  # Trigger only on changes to the master branch
+      - master  # Trigger on GitHub 'master' or 'main' branch updates
 
 pool:
-  vmImage: 'ubuntu-latest'  # Use the Ubuntu hosted image
+  vmImage: 'ubuntu-latest'
 
 variables:
-  repositoryName: 'hiteshmechlin/timetracker'  # Docker Hub repository name
-  dockerRegistry: 'dockerserviceconnection'  # Docker Hub service connection name
+  repositoryName: 'hiteshmechlin/timetracker'  # Replace with your actual Docker Hub repository name
+  dockerRegistry: 'dockerserviceconnectio'  # Replace with your Docker Hub service connection name
 
 steps:
-# Step 1: Checkout code from GitHub
-- task: Checkout@1
-  displayName: 'Checkout Code'
-  inputs:
-    clean: true  # Clean the repository before checking out
-
-# Step 2: Build and Push Docker Image
 - task: Docker@2
-  displayName: 'Build and Push Docker Image'
   inputs:
     containerRegistry: $(dockerRegistry)  # Docker Hub service connection
     repository: $(repositoryName)  # Docker Hub repository name
-    command: 'buildAndPush'  # Command to build and push
-    Dockerfile: 'Dockerfile'  # Path to the Dockerfile
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'  # Path to your Dockerfile (make sure it is correct)
     tags: |
-      $(Build.BuildId)  # Tag the image with the build ID
-      $(Build.SourceVersion)  # Optionally tag with the commit hash
+      $(Build.BuildId)  # Tag the image with build ID
+      $(Build.SourceVersion)  # Optionally, tag with commit hash
 
-# Optional Step: (If you want a post-build notification or message)
-- script: |
-    echo "Docker image $(repositoryName):$(Build.BuildId) successfully built and pushed!"
-  displayName: 'Post Build Notification'
