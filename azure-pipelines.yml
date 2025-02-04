@@ -1,61 +1,22 @@
 trigger:
   branches:
     include:
-      - master
+      - master  # Trigger on GitHub 'master' or 'main' branch updates
 
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  - group: docker  # Ensure 'docker' is the exact name of your variable group
+  repositoryName: 'hiteshmechlin/timetracker'  # Replace with your actual Docker Hub repository name
+  dockerRegistry: 'dockerserviceconnection'  # Replace with your Docker Hub service connection name
 
 steps:
-- task: Checkout@1
-  displayName: 'Checkout code'
+- task: Docker@2
   inputs:
-    clean: true
-  continueOnError: false
-
-- script: |
-    echo "Started checking out the code from GitHub..."
-  displayName: 'Log: GitHub Checkout Start'
-
-- script: |
-    echo "Docker Registry: Docker Hub"
-    echo "Build Source Directory: $(Build.SourcesDirectory)"
-    echo "Build ID: $(Build.BuildId)"
-    echo "Checking Dockerfile presence at $(Build.SourcesDirectory)/Dockerfile"
-    ls -al $(Build.SourcesDirectory)
-  displayName: 'Log: Debug Variables and Files'
-
-- script: |
-    echo "Starting Docker Hub login..."
-  displayName: 'Log: Docker Hub Login Start'
-
-- script: |
-    echo "$(DOCKER_HUB_ACCESS_TOKEN)" | docker login -u $(DOCKER_USERNAME) --password-stdin  # Use access token and username from the variable group
-  displayName: 'Docker Hub Login'
-
-- script: |
-    docker --version
-  displayName: 'Verify Docker Version'
-
-- script: |
-    echo "Starting Docker image build and push..."
-  displayName: 'Log: Docker Build and Push Start'
-
-- script: |
-    echo "Build ID: $(Build.BuildId)"
-  displayName: 'Log Build ID'
-
-- script: |
-    docker build -t $(DOCKER_USERNAME)/timetracker:$(Build.BuildId) .
-    docker push $(DOCKER_USERNAME)/timetracker:$(Build.BuildId)
-  displayName: 'Build and Push Docker Image'
-
-- script: |
-    echo "Docker image build and push completed successfully!"
-  displayName: 'Log: Docker Build and Push Completion'
-
-
-#Code Update 
+    containerRegistry: $(dockerRegistry)  # Docker Hub service connection
+    repository: $(repositoryName)  # Docker Hub repository name
+    command: 'buildAndPush'
+    Dockerfile: 'Dockerfile'  # Path to your Dockerfile (make sure it is correct)
+    tags: |
+      $(Build.BuildId)  # Tag the image with build ID
+      $(Build.SourceVersion)  # Optionally, tag with commit hash
