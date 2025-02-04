@@ -9,7 +9,7 @@ pool:
 
 variables:
   repositoryName: 'hiteshmechlin/timetracker'  # Replace with your actual Docker Hub repository name
-  dockerRegistry: 'dockerserviceconnectio'  # Replace with your Docker Hub service connection name
+  dockerRegistry: 'dockerserviceconnection'  # Replace with your Docker Hub service connection name
 
 steps:
 - task: Docker@2
